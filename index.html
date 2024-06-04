@@ -88,6 +88,18 @@
   </main>
 
   <script>
+    // let form = document.querySelector('form');
+    // form.addEventListener('submit', e => {
+    //   e.preventDefault();
+    //   let output = document.querySelector('output');
+    //   let firstNum = document.querySelector('#first-num').value;
+    //   let secondNum = document.querySelector('#second-num').value;
+    //   let operator = document.querySelector('#operator').value;
+    //   output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+    // });
+
+    // let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,10 +107,108 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        if (!firstNum || !secondNum) throw new Error('Both numbers are required.');
+        let result = eval(`${firstNum} ${operator} ${secondNum}`);
+        output.innerHTML = result;
+      } catch (error) {
+        console.error('Calculation Error: ', error);
+        output.innerHTML = 'Error: ' + error.message;
+      } finally {
+        console.log('Calculation attempted');
+      }
     });
 
+    class InvalidInputError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'InvalidInputError';
+      }
+    }
+
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+
+    // Console Log
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+
+    // Console Error
+    errorBtns[1].addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+
+    // Console Count
+    errorBtns[2].addEventListener('click', () => {
+      console.count('Console Count Demo');
+    });
+
+    // Console Warn
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Console Warn Demo');
+    });
+
+    // Console Assert
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(false, 'Console Assert Demo');
+    });
+
+    // Console Clear
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+
+    // Console Dir
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(document.body);
+    });
+
+    // Console dirxml
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(document.body);
+    });
+
+    // Console Group Start & End
+    errorBtns[8].addEventListener('click', () => {
+      console.group('Console Group');
+      console.log('Inside Group');
+      console.groupEnd();
+    });
+
+    // Console Table
+    errorBtns[10].addEventListener('click', () => {
+      console.table([{ name: 'Alice', age: 30 }, { name: 'Bob', age: 25 }]);
+    });
+
+    // Start Timer
+    errorBtns[11].addEventListener('click', () => {
+      console.time('Timer');
+    });
+
+    // End Timer
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('Timer');
+    });
+
+    // Console Trace
+    errorBtns[13].addEventListener('click', () => {
+      console.trace('Console Trace Demo');
+    });
+
+    // Trigger a Global Error
+    errorBtns[14].addEventListener('click', () => {
+      try {
+        nonExistentFunction();
+      } catch (error) {
+        console.error('Global Error Caught: ', error);
+        TrackJS.track(error);
+      }
+    });
+
+    window.addEventListener('error', (event) => {
+      console.error('Global Error Caught: ', event.message);
+      return true; // Prevents the default browser error handling
+    });
 
     // Start your code here
     // You may move this JS to another file if you wish
