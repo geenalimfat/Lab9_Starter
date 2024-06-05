@@ -86,20 +86,16 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  
   <script>
-    // let form = document.querySelector('form');
-    // form.addEventListener('submit', e => {
-    //   e.preventDefault();
-    //   let output = document.querySelector('output');
-    //   let firstNum = document.querySelector('#first-num').value;
-    //   let secondNum = document.querySelector('#second-num').value;
-    //   let operator = document.querySelector('#operator').value;
-    //   output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-    // });
-
-    // let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-
+    //3rd party monitoring service
+    window.TrackJS && TrackJS.install({ 
+      token: "6731533736ef44098919fcfb8f489e8b"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+    
+    
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -107,6 +103,8 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
+
+      //using try, catch, finally and throw
       try {
         if (!firstNum || !secondNum) throw new Error('Both numbers are required.');
         let result = eval(`${firstNum} ${operator} ${secondNum}`);
@@ -115,10 +113,28 @@
         console.error('Calculation Error: ', error);
         output.innerHTML = 'Error: ' + error.message;
       } finally {
-        console.log('Calculation attempted');
+        console.log('Sadly an error as occurred');
       }
     });
 
+    // for console trace button
+    function handleBtnClick() {
+      deep();
+    }
+
+    function deep() {
+      deeper();
+    }
+
+    function deeper() {
+      deepest();
+    }
+
+    function deepest() {
+      console.trace('Console Trace Demo');
+    }
+
+    //custome error message
     class InvalidInputError extends Error {
       constructor(message) {
         super(message);
@@ -151,6 +167,7 @@
     // Console Assert
     errorBtns[4].addEventListener('click', () => {
       console.assert(false, 'Console Assert Demo');
+      console.log('The calculation is off');
     });
 
     // Console Clear
@@ -160,24 +177,29 @@
 
     // Console Dir
     errorBtns[6].addEventListener('click', () => {
-      console.dir(document.body);
+      console.dir(errorBtns[6]);
     });
 
     // Console dirxml
     errorBtns[7].addEventListener('click', () => {
-      console.dirxml(document.body);
+      const button = document.createElement('button');
+      button.textContent = 'Console dirxml';
+      console.dirxml(button);
     });
 
-    // Console Group Start & End
-    errorBtns[8].addEventListener('click', () => {
+     // Console Group Start
+     errorBtns[8].addEventListener('click', () => {
       console.group('Console Group');
-      console.log('Inside Group');
+    });
+
+    // Console Group End
+    errorBtns[9].addEventListener('click', () => {
       console.groupEnd();
     });
 
     // Console Table
     errorBtns[10].addEventListener('click', () => {
-      console.table([{ name: 'Alice', age: 30 }, { name: 'Bob', age: 25 }]);
+      console.table([{ name: 'Software Engineering', num: 110 }, { name: 'Programming Language', num: 130 }, {name: 'Advanced Software', num: 120}]);
     });
 
     // Start Timer
@@ -192,13 +214,13 @@
 
     // Console Trace
     errorBtns[13].addEventListener('click', () => {
-      console.trace('Console Trace Demo');
+      handleBtnClick();
     });
 
     // Trigger a Global Error
     errorBtns[14].addEventListener('click', () => {
       try {
-        nonExistentFunction();
+        boom(); //  ReferenceError
       } catch (error) {
         console.error('Global Error Caught: ', error);
         TrackJS.track(error);
@@ -207,11 +229,8 @@
 
     window.addEventListener('error', (event) => {
       console.error('Global Error Caught: ', event.message);
-      return true; // Prevents the default browser error handling
+      return true; 
     });
-
-    // Start your code here
-    // You may move this JS to another file if you wish
   </script>
 </body>
 
